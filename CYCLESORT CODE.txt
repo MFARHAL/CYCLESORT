@@ -1,0 +1,134 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace cycle_sort
+{
+    class Filing
+    {
+        string mydocpath = "C:\\Users\\M. Farhal\\Documents\\semester III\\ds project\\cyclesortfile.txt";
+        public int[] Reader(int Len)
+        {
+            int[] Arr = new int[Len];
+            try
+            {
+                using (StreamReader SR = new StreamReader(mydocpath))
+                {
+                    for (int i = 0; i < Len; i++)
+                    {
+                        Arr[i] = Convert.ToInt16(SR.ReadLine());
+                        Console.WriteLine(" Array[{0}] :    {1}", i, Arr[i]);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(" SORRY! File Not Found");
+                Console.WriteLine(e.Message);
+            }
+            return Arr;
+        }
+        public int getlength()
+        {
+            int count = 0;
+            try
+            {
+                using (StreamReader s = new StreamReader(mydocpath))
+                {
+                    string Line;
+                    while ((Line = s.ReadLine()) != null)
+                    {
+                        count++;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error");
+                Console.WriteLine(e.Message);
+            }
+            return count;
+        }
+        public void Writer(int[] Array)
+        {
+            using (StreamWriter SW = new StreamWriter(mydocpath))
+            {
+                for (int i = 0; i < Array.Length; i++)
+                {
+                    SW.WriteLine(Array[i]);
+                }
+            }
+        }
+    }
+    class cyclesort
+    {
+        public int[] sorting(int[] array)
+        {
+            int pos;
+            int item;
+            int temp;
+            for (int cycleStart = 0; cycleStart < array.Length; cycleStart++)
+            {
+                item = array[cycleStart];
+                pos = cycleStart;
+                for (int i = cycleStart + 1; i < array.Length; i++)
+                {
+                    if (array[i] < item)
+                        pos++;
+                }
+                if (pos == cycleStart)
+                    continue;
+                while (item == array[pos])
+                    pos++;
+                if (item != array[pos])
+                {
+                    temp = array[pos];
+                    array[pos] = item;
+                    item = temp;
+                }
+                while (pos != cycleStart)
+                {
+                    pos = cycleStart;
+                    for (int i = cycleStart + 1; i < array.Length; i++)
+                    {
+                        if (array[i] < item)
+                            pos++;
+                    }
+                    while (item == array[pos])
+                        pos++;
+                    if (item != array[pos])
+                    {
+                        temp = array[pos];
+                        array[pos] = item;
+                        item = temp;
+                    }
+                }
+            }
+            return array;
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("     CYCLE   SORT");
+            Filing F = new Filing()
+            int Len = F.getlength();
+            Console.WriteLine(" Length of Array is  :   " + Len);
+            Console.WriteLine("\n\n Before Sorting: ");
+            int[] arr = F.Reader(Len);
+            cyclesort cs = new cyclesort();
+            Console.WriteLine("\n\n After Sorting: ");
+            arr = cs.sorting(arr);
+            for (int i = 0; i < Len; i++)
+            {
+                Console.WriteLine(" Array[{0}] :    {1}", i, arr[i]);
+            }
+            F.Writer(arr);
+            Console.ReadLine();
+        }
+    }
+}
